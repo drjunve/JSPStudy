@@ -1,6 +1,6 @@
 package membership;
 /*
-DTO(Data Transfer Objecdt)
+DTO(Data Transfer Object)
 : JSP와 Java파일간에 데이터를 전달하기 위한 객체로 자바빈 규약에 의해
 제작한다.
 자바빈 규약은 책 114페이지를 참조한다.
@@ -37,12 +37,13 @@ public class MemberDTO {
 		return name;
 	}
 	public void setName(String name) {
-		this.id = name;
+		this.name = name;
 	}
 	public String getRegidate() {
 		return regidate;
 	}
 	public void setRegidate(String regidate) {
-		this.id = regidate;
+		this.regidate = regidate;
 	}
+	
 }
