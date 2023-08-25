@@ -227,4 +227,59 @@ public class BoardDAO extends JDBConnect {
 		
 		return result;
 	}
+	
+	//게시물 목록 출력시 페이징 기능 추가
+	public List<BoardDTO> selectListPage(Map<String, Object> map) {
+		
+		List<BoardDTO> bbs = new Vector<BoardDTO>();
+		
+		/* 검색조건에 일치하는 게시물을 얻어온 후 각 페이지에 출려갈
+		 * 구간까지 설정한 서브 쿼리문 작성 */
+		String query = "SELECT * FROM ("
+					+ "    SELECT Tb.*, ROWNUM rNum FROM ("
+					+ "        SELECT * FROM board";
+		//검색어가 있는 경우에만 where절을 추가한다.
+		if (map.get("searchWord") != null) {
+			query += " WHERE " + map.get("searchField")
+					+ " LIKE '%" + map.get("searchWord") + "%' ";
+		}
+		/* 게시물의 구간을 결정하기 위해 between 혹은 비교연산자를
+		 * 사용할 수 있다. 아래의 where 절은 rNum> 과 같이 변경할 수 있다. */
+		query += "     ORDER BY num DESC "
+				+"    ) Tb"
+				+" ) "
+				+" WHERE rNum BETWEEN ? AND ?";
+		
+		try {
+			//인파라미터가 있는 쿼리문으로 prepared객체 생성
+			psmt = con.prepareStatement(query);
+			//인파라미터 설정
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+			//쿼리문 실행 및 ResultSet반환
+			rs = psmt.executeQuery();
+			//2개 이상의 레코드가 반환될 수 있으므로 while문을 사용한다.
+			while (rs.next()) {
+				//하나의 레코드를 저장할 수 있는 DTO객체를 생성한다.
+				BoardDTO dto = new BoardDTO();
+				
+				//setter를 이용해서 각 컬럼의 값을 멤버변수에 저장한다.
+				dto.setNum(rs.getString("num"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setPostdate(rs.getDate("postdate"));
+				dto.setId(rs.getString("id"));
+				dto.setVisitcount(rs.getString("visitcount"));
+				//List에 DTO를 추가한다.
+				bbs.add(dto);
+			}
+		}
+		catch (Exception e) {
+			System.out.println("게시물 조회 줄 예외 발생");
+			e.printStackTrace();
+		}
+		
+		//인출한 레코드를 저장한 List를 호출한 지점으로 반환한다.
+		return bbs;
+	}
 }
