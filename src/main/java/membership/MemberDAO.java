@@ -35,8 +35,8 @@ public class MemberDAO extends JDBConnect {
 			//쿼리문 실행을 위한 prepared 객체 생성
 			psmt = con.prepareStatement(query);
 			//인파라미터를 설정
-			psmt.setString(1,  uid);
-			psmt.setString(2,  upass);
+			psmt.setString(1, uid);
+			psmt.setString(2, upass);
 			//쿼리문을 실행한 후 ResultSet객체를 통해 결과 반환
 			rs = psmt.executeQuery();
 			

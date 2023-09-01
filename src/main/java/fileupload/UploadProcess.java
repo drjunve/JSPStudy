@@ -34,7 +34,7 @@ public class UploadProcess extends HttpServlet {
 			
 			//유틸리티 클래스의 uploadFile()을 호출하여 파일을 업로드 한다.
 			String originalFileName = 
-					FileUtil.uploadFile(req,  saveDirectory);
+					FileUtil.uploadFile(req, saveDirectory);
 			
 			//renameFile()을 호출하여 저장된 파일명을 변경한다.
 			String savedFileName = 
